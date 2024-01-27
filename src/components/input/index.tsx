@@ -62,7 +62,10 @@ export default function Input(props: IInput) {
               onClick={onCLickPasswordVisibility}
               edge="end"
             >
-              {hidePassword ? <Visibility /> : <VisibilityOff />}
+              {hidePassword
+                ? <VisibilityOff style={styles.icon} />
+                : <Visibility style={styles.icon} />
+              }
             </IconButton>
           </InputAdornment>
         )}
