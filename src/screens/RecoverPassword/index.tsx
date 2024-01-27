@@ -8,10 +8,9 @@ import Button from '../../components/Button';
 import ButtonText from '../../components/ButtonText';
 import styles from './styles';
 
-export default function CreateAccount() {
+export default function RecoverPassword() {
   const navigate = useNavigate();
 
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -22,8 +21,8 @@ export default function CreateAccount() {
     navigate('/login')
   }
 
-  function onPressCreate() {
-    console.log("onPressCreate")
+  function onPressRecover() {
+    console.log("onPressRecover")
   }
 
   return (
@@ -42,18 +41,10 @@ export default function CreateAccount() {
         style={styles.containerForm}>
         <div style={styles.containerItems}>
           <div style={styles.containerTitle}>
-            <Title>Inscreva-se</Title>
+            <Title>Trocar senha</Title>
           </div>
 
           <div style={styles.containerInputs}>
-            <Input
-              id='name'
-              label='Nome'
-              value={name}
-              type={'text'}
-              placeholder='Digite seu email'
-              onChange={(value) => setName(value)} />
-
             <Input
               id='email'
               label='Email'
@@ -67,7 +58,7 @@ export default function CreateAccount() {
               label='Senha'
               value={password}
               type='text'
-              placeholder='Digite sua senha'
+              placeholder='Digite sua nova senha'
               hidePassword={hidePassword}
               onChange={(value) => setPassword(value)}
               onCLickPasswordVisibility={() => setHidePassword(value => !value)} />
@@ -77,18 +68,18 @@ export default function CreateAccount() {
               label='Confirmar senha'
               value={confirmPassword}
               type='text'
-              placeholder='Confirme sua senha'
+              placeholder='Confirme sua nova senha'
               hidePassword={hideConfirmPassword}
               onChange={(value) => setConfirmPassword(value)}
               onCLickPasswordVisibility={() => setHideConfirmPassword(value => !value)} />
           </div>
 
           <div style={styles.containerButtons}>
-            <Button onClick={onPressCreate}>Cadastrar</Button>
+            <Button onClick={onPressRecover}>Alterar senha</Button>
 
             <div style={styles.containerButtonsText}>
               <ButtonText
-                complementeText={'Já se cadastrou? '}
+                complementeText={'Lembrou a senha ? '}
                 principalText={'Vá para o login'}
                 onClick={onPressLogin}
               />
