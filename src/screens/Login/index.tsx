@@ -16,7 +16,7 @@ export default function Login() {
   const [hidePassword, setHidePassword] = useState(true);
 
   function onPressForgetPassword() {
-    console.log("onPressForgetPassword")
+    navigate('/trocarSenha')
   }
 
   function onPressLogin() {
