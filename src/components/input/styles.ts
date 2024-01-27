@@ -34,6 +34,9 @@ const styles = {
   errorMessage: {
     ...defaultLabel,
     color: 'red',
+  },
+  icon: {
+    color: colors.primary.dark
   }
 }
 

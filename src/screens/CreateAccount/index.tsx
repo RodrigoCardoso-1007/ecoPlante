@@ -1,6 +1,6 @@
-import { Grid } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Grid } from '@mui/material';
 import LogoType from './../../assets/Images/logotype.svg'
 import Input from '../../components/Input';
 import Title from '../../components/Title';
@@ -11,20 +11,19 @@ import styles from './styles';
 export default function Login() {
   const navigate = useNavigate();
 
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
-
-  function onPressForgetPassword() {
-    console.log("onPressForgetPassword")
-  }
+  const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
 
   function onPressLogin() {
-    console.log("onPressLogin")
+    navigate('/login')
   }
 
-  function onPressCreateAccount() {
-    navigate('/cadastro')
+  function onPressCreate() {
+    console.log("onPressCreate")
   }
 
   return (
@@ -43,10 +42,18 @@ export default function Login() {
         style={styles.containerForm}>
         <div style={styles.containerItems}>
           <div style={styles.containerTitle}>
-            <Title>Login</Title>
+            <Title>Inscreva-se</Title>
           </div>
 
           <div style={styles.containerInputs}>
+            <Input
+              id='name'
+              label='Nome'
+              value={name}
+              type={'text'}
+              placeholder='Digite seu email'
+              onChange={(value) => setName(value)} />
+
             <Input
               id='email'
               label='Email'
@@ -56,7 +63,7 @@ export default function Login() {
               onChange={(value) => setEmail(value)} />
 
             <Input
-              id='senha'
+              id='password'
               label='Senha'
               value={password}
               type='text'
@@ -64,20 +71,26 @@ export default function Login() {
               hidePassword={hidePassword}
               onChange={(value) => setPassword(value)}
               onCLickPasswordVisibility={() => setHidePassword(value => !value)} />
+
+            <Input
+              id='confirmPassword'
+              label='Confirmar senha'
+              value={confirmPassword}
+              type='text'
+              placeholder='Confirme sua senha'
+              hidePassword={hideConfirmPassword}
+              onChange={(value) => setConfirmPassword(value)}
+              onCLickPasswordVisibility={() => setHideConfirmPassword(value => !value)} />
           </div>
 
           <div style={styles.containerButtons}>
-            <Button onClick={onPressLogin}>Entrar</Button>
+            <Button onClick={onPressCreate}>Cadastrar</Button>
 
             <div style={styles.containerButtonsText}>
               <ButtonText
-                principalText={'Esqueceu seu senha?'}
-                onClick={onPressForgetPassword}
-              />
-              <ButtonText
-                complementeText={'Não tem conta? '}
-                principalText={'Cadastre-se'}
-                onClick={onPressCreateAccount}
+                complementeText={'Já se cadastrou? '}
+                principalText={'Vá para o login'}
+                onClick={onPressLogin}
               />
             </div>
           </div>
