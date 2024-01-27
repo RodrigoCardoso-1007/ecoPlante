@@ -18,7 +18,7 @@ export default function RecoverPassword() {
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
 
   function onPressLogin() {
-    navigate('/login')
+    navigate('/')
   }
 
   function onPressRecover() {

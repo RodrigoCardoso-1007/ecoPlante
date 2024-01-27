@@ -7,10 +7,10 @@ interface IButton {
 }
 
 export default function Button(props: IButton) {
-  const { children } = props;
+  const { children, onClick } = props;
 
   return (
-    <ButtonMaterial variant="contained" style={styles.button}>
+    <ButtonMaterial variant="contained" style={styles.button} onClick={onClick}>
       {children}
     </ButtonMaterial>
   )

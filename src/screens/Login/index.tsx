@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LogoType from './../../assets/Images/logotype.svg'
 import Input from '../../components/Input';
@@ -7,9 +7,12 @@ import Title from '../../components/Title';
 import Button from '../../components/Button';
 import ButtonText from '../../components/ButtonText';
 import styles from './styles';
+import UserRequest from '../../modules/Network/User';
+import { UserContext } from '../../contexts/user.context';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { updateUserData } = useContext(UserContext)
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,7 +23,13 @@ export default function Login() {
   }
 
   function onPressLogin() {
-    console.log("onPressLogin")
+    UserRequest().login({ email, password })
+      .then((res) => {
+        localStorage.setItem('userData', JSON.stringify(res));
+        updateUserData(JSON.stringify(res))
+      }).catch((error) => {
+        console.log("error", error)
+      })
   }
 
   function onPressCreateAccount() {

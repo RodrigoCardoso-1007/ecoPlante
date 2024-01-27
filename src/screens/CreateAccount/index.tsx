@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import LogoType from './../../assets/Images/logotype.svg'
@@ -7,9 +7,12 @@ import Title from '../../components/Title';
 import Button from '../../components/Button';
 import ButtonText from '../../components/ButtonText';
 import styles from './styles';
+import UserRequest from '../../modules/Network/User';
+import { UserContext } from '../../contexts/user.context';
 
 export default function CreateAccount() {
   const navigate = useNavigate();
+  const { updateUserData } = useContext(UserContext)
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -19,11 +22,18 @@ export default function CreateAccount() {
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
 
   function onPressLogin() {
-    navigate('/login')
+    navigate('/')
   }
 
   function onPressCreate() {
-    console.log("onPressCreate")
+    UserRequest().login({ email, password })
+      .then((res) => {
+        localStorage.setItem('userData', JSON.stringify(res));
+        updateUserData(JSON.stringify(res))
+        navigate('/')
+      }).catch((error) => {
+        console.log("error", error)
+      })
   }
 
   return (
