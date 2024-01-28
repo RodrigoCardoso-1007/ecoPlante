@@ -20,7 +20,8 @@ export default function Home() {
       adubacao: 'ADUBACAO 1'
     }
 
-    navigate('/fazerRegistro', { state: { register } })
+    navigate('/cadastrarPlanta')
+    // navigate('/fazerRegistro', { state: { register } })
   }
 
   return (
