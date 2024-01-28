@@ -1,8 +1,9 @@
 import { createContext, useState } from 'react';
+import IUserModel from '../model/user.model';
 
 interface IUserContext {
-  userData: string | null,
-  updateUserData: (data: string | null) => void;
+  userData: IUserModel | null,
+  updateUserData: (data: IUserModel | null) => void;
 }
 
 const UserContext = createContext<IUserContext>({
@@ -11,10 +12,17 @@ const UserContext = createContext<IUserContext>({
 });
 
 const UserContextProvider = ({ children }: any) => {
-  const [userData, setUserData] = useState<string | null>(localStorage.getItem('userData'))
+  const userFromLocal = localStorage.getItem('userData')
+  const [userData, setUserData] = useState<IUserModel | null>(userFromLocal ? JSON.parse(userFromLocal) : null)
 
-  function updateUserData(data: string | null) {
+  function updateUserData(data: IUserModel | null) {
     setUserData(data)
+
+    if (data === null) {
+      localStorage.removeItem('userData')
+    } else {
+      localStorage.setItem('userData', JSON.stringify(data));
+    }
   }
 
   return (

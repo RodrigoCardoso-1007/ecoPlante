@@ -5,7 +5,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     display: 'flex',
-    padding: '0px 32px 0px 32px'
+    padding: '8px 32px 0px 32px'
   },
 }
 

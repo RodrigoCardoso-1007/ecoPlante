@@ -12,6 +12,7 @@ interface IInput {
   disabled?: boolean;
   hidePassword?: boolean;
   style?: React.CSSProperties,
+  multiline?: boolean,
   errorMessage?: string,
   onChange: (item: string) => void;
   onCLickPasswordVisibility?: () => void;
@@ -28,6 +29,7 @@ export default function Input(props: IInput) {
     disabled,
     style,
     hidePassword,
+    multiline,
     errorMessage,
     onChange,
     onCLickPasswordVisibility
@@ -49,6 +51,8 @@ export default function Input(props: IInput) {
         id={id}
         autoFocus={false}
         value={value}
+        multiline={multiline}
+        rows={multiline ? 4 : 1}
         required={required}
         placeholder={placeholder}
         size='small'

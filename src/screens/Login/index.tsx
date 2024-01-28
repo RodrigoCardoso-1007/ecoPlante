@@ -25,8 +25,7 @@ export default function Login() {
   function onPressLogin() {
     UserRequest().login({ email, password })
       .then((res) => {
-        localStorage.setItem('userData', JSON.stringify(res));
-        updateUserData(JSON.stringify(res))
+        updateUserData(res)
       }).catch((error) => {
         console.log("error", error)
       })
