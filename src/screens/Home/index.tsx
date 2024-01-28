@@ -1,33 +1,101 @@
-import { useContext } from "react";
-import Button from "../../components/Button";
-import { UserContext } from "../../contexts/user.context";
 import { useNavigate } from "react-router-dom";
-import IRegisterModel from "../../model/register.model";
+import styles from "./styles";
+import Header from "../../components/Header";
+import { Grid } from "@mui/material";
+import TitleSubtitle from '../../components/TitleSubTitle'
+import ButtonFilled from "../../components/ButtonFilled";
+import IPlantModel from "../../model/plant.model";
+import CardPlant from "../../components/CardPlant";
+import NewPlant from './../../assets/Images/newPlant.svg'
+
+const PLANT_LIST_MOCK: IPlantModel[] = [
+  {
+    idPlant: 1,
+    datePlant: new Date(),
+    description: 'Minha planta 1',
+    difficulty: 'Fácil',
+    local: 'casa',
+    namePlant: 'Planta 1',
+    photo: 'https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg'
+  },
+  {
+    idPlant: 2,
+    datePlant: new Date(),
+    description: 'Minha planta 2',
+    difficulty: 'Fácil',
+    local: 'casa',
+    namePlant: 'Planta 2',
+  },
+  {
+    idPlant: 3,
+    datePlant: new Date(),
+    description: 'Minha planta 3',
+    difficulty: 'Fácil',
+    local: 'casa',
+    namePlant: 'Planta 3',
+    photo: 'https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg'
+  }, {
+    idPlant: 4,
+    datePlant: new Date(),
+    description: 'Minha planta 4',
+    difficulty: 'Fácil',
+    local: 'casa',
+    namePlant: 'Planta 4',
+    photo: 'https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg'
+  }
+]
 
 export default function Home() {
   const navigate = useNavigate();
-  const { updateUserData } = useContext(UserContext)
 
-  function logout() {
-    updateUserData(null)
+  function onPressCard(plant?: IPlantModel | null) {
+    if (!!plant)
+      navigate('/cadastrarPlanta', { state: { plant } })
+    else
+      navigate('/cadastrarPlanta')
   }
 
-  function createRegister() {
-    const register: IRegisterModel = {
-      idRegister: 1,
-      poda: 'PODA 1',
-      rega: 'REGA 1',
-      adubacao: 'ADUBACAO 1'
-    }
-
-    navigate('/cadastrarPlanta')
-    // navigate('/fazerRegistro', { state: { register } })
+  function renderItem(plant: IPlantModel) {
+    return (
+      <Grid item lg={3} md={4} sm={6} xs={6}>
+        <CardPlant
+          title={plant.namePlant}
+          src={plant.photo}
+          onClick={() => onPressCard(plant)}
+        />
+      </Grid>
+    )
   }
 
   return (
-    <>
-      <Button onClick={logout}>Sair da conta</Button>
-      <Button onClick={createRegister}>Criar registro</Button>
-    </>
+    <div style={styles.globalContainer}>
+      <Header />
+      <div style={styles.container}>
+        <Grid container item lg={8} md={8} sm={8} xs={10} style={styles.containerHeader} >
+          <Grid item lg={3} md={3} sm={6}>
+            <TitleSubtitle
+              title="Aqui está"
+              subTitle="a sua lista de plantas"
+            />
+          </Grid>
+
+          <Grid item lg={3} md={3} sm={6}>
+            <ButtonFilled onClick={() => onPressCard(null)}>
+              Adicionar planta
+            </ButtonFilled>
+          </Grid>
+        </Grid>
+        <Grid container item lg={8} md={8} sm={8} spacing={2}>
+          {PLANT_LIST_MOCK.map(renderItem)}
+
+          <Grid item lg={3} md={4} sm={6} xs={6}>
+            <CardPlant
+              title="Nova Planta"
+              src={NewPlant}
+              onClick={() => onPressCard(null)} />
+          </Grid>
+        </Grid>
+      </div>
+    </div>
   )
 }
