@@ -5,7 +5,8 @@ const styles = {
     fontWeight: 'bold',
     color: colors.primary.dark,
     fontSize: '48px',
-    margin: '0px'
+    margin: '0px',
+    textAlign: 'center'
   }
 }
 

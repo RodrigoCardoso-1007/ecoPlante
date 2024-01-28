@@ -6,6 +6,7 @@ import RecoverPassword from "../screens/RecoverPassword";
 import { UserContext } from "../contexts/user.context";
 import { useContext } from "react";
 import Home from "../screens/Home";
+import CreateRegister from "../screens/CreateRegister";
 
 
 const NotLogged = () => (
@@ -20,6 +21,7 @@ const Logged = () => (
   <>
     <Route path="/" element={<Home />} />
     <Route path="/home" element={<Home />} />
+    <Route path="/fazerRegistro" element={<CreateRegister />} />
   </>
 )
 

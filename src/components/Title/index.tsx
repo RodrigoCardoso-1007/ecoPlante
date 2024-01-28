@@ -2,12 +2,13 @@ import styles from "./styles";
 
 interface ITitle {
   children: string,
+  styleProps?: any;
 }
 
 export default function Title(props: ITitle) {
-  const { children } = props;
+  const { children, styleProps } = props;
 
   return (
-    <h1 style={styles.text}>{children}</h1>
+    <h1 style={{ ...styles.text, ...styleProps }}>{children}</h1>
   )
 }
