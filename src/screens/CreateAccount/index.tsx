@@ -7,7 +7,7 @@ import Title from '../../components/Title';
 import Button from '../../components/Button';
 import ButtonText from '../../components/ButtonText';
 import styles from './styles';
-import UserRequest from '../../modules/Network/User';
+import { UserRequest } from '../../modules/Network/User';
 import { UserContext } from '../../contexts/user.context';
 
 export default function CreateAccount() {

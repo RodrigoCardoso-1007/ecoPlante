@@ -1,7 +1,7 @@
 import RestAPI from "../apiModule"
 import { InLogin, OutLogin } from "./userRequest.interface"
 
-export default function UserRequest() {
+export function UserRequest() {
   const USER_URL = '/User'
 
   function login(data: InLogin): Promise<OutLogin> {
