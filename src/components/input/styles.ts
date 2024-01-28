@@ -22,6 +22,7 @@ const styles = {
   availableInput: {
     ...defaultInput,
     backgroundColor: colors.base.white,
+    height: 'auto'
   },
   disableInput: {
     ...defaultInput,

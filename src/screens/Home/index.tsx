@@ -9,7 +9,6 @@ export default function Home() {
   const { updateUserData } = useContext(UserContext)
 
   function logout() {
-    localStorage.removeItem('userData')
     updateUserData(null)
   }
 

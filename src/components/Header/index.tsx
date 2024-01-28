@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Avatar, Button, Menu, MenuItem } from '@mui/material';
+import { Button, Menu, MenuItem } from '@mui/material';
 import { UserContext } from '../../contexts/user.context';
 import colors from '../../styles/colors';
 import styles from './styles';
+import Avatar from '../Avatar';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function Header() {
 
   function onPressProfile() {
     handleClose();
-    // navigate('/')
+    navigate('/perfil')
   }
 
   function onPressPlants() {
@@ -32,7 +33,6 @@ export default function Header() {
   }
 
   function onPressLogout() {
-    localStorage.removeItem('userData')
     updateUserData(null)
     navigate('/')
   }
@@ -64,9 +64,7 @@ export default function Header() {
         </Menu>
       </div>
 
-      <Button onClick={onPressProfile}>
-        <Avatar style={{ fontSize: '60px' }} />
-      </Button>
+      <Avatar size={48} onClick={onPressProfile} />
     </div>
   )
 }
