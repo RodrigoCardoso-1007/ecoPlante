@@ -8,6 +8,7 @@ import { useContext } from "react";
 import Home from "../screens/Home";
 import CreateRegister from "../screens/CreateRegister";
 import Profile from "../screens/Profile";
+import CreatePlant from "../screens/CreatePlant";
 
 
 const NotLogged = () => (
@@ -23,6 +24,7 @@ const Logged = () => (
     <Route path="/" element={<Home />} />
     <Route path="/home" element={<Home />} />
     <Route path="/fazerRegistro" element={<CreateRegister />} />
+    <Route path="/cadastrarPlanta" element={<CreatePlant />} />
     <Route path="/perfil" element={<Profile />} />
   </>
 )
