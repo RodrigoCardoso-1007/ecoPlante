@@ -1,7 +1,7 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./styles";
 import Button from "../../components/Button";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Header from "../../components/Header";
 import Title from "../../components/Title";
 import { Grid } from "@mui/material";
@@ -13,20 +13,20 @@ import IUserModel from "../../model/user.model";
 
 export default function Profile() {
   const { userData, updateUserData } = useContext(UserContext)
-  const { state } = useLocation();
   const navigate = useNavigate();
+
+  const inputFile = useRef(null)
 
   const [name, setName] = useState(userData?.name || '')
   const [about, setAbout] = useState(userData?.about || '')
   const [photo, setPhoto] = useState(userData?.photo || '')
-  const [email, setEmail] = useState(userData?.email || '')
 
   function onPressSave() {
     const newUserData: IUserModel = {
       name: name,
       about: about,
       photo: photo,
-      email: email,
+      email: userData?.email || '',
       idUser: userData?.idUser || 0
     }
 
@@ -36,6 +36,25 @@ export default function Profile() {
 
   function onPressGoBack() {
     navigate('/')
+  }
+
+  function onPressPhoto() {
+    // @ts-ignore
+    if (inputFile) inputFile.current.click();
+  }
+
+  function changePhoto(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        if (typeof (reader.result) === 'string')
+          setPhoto(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   return (
@@ -48,11 +67,17 @@ export default function Profile() {
           </Title>
 
           <div style={styles.containerPhoto}>
-            <Avatar size={100}
-              src="https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg"
-            />
-            <p style={styles.email}>{email}</p>
+            <Avatar size={100} src={photo} onClick={onPressPhoto} />
+            <p style={styles.email}>{userData?.email || ''}</p>
           </div>
+
+          <input
+            type='file'
+            id='file'
+            onChange={changePhoto}
+            ref={inputFile}
+            style={{ display: 'none' }}
+            accept='image/*' />
 
           <Grid container spacing={2}>
             <Grid item lg={12} md={12} sm={12} xs={12}>

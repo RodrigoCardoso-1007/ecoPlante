@@ -1,3 +1,5 @@
+import IRegisterModel from "./register.model";
+
 interface IPlantModel {
   idPlant: number;
   namePlant: string;
@@ -6,6 +8,7 @@ interface IPlantModel {
   datePlant?: Date;
   description?: string;
   photo?: string;
+  registerList?: IRegisterModel[]
 }
 
 export default IPlantModel;

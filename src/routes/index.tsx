@@ -6,9 +6,9 @@ import RecoverPassword from "../screens/RecoverPassword";
 import { UserContext } from "../contexts/user.context";
 import { useContext } from "react";
 import Home from "../screens/Home";
-import CreateRegister from "../screens/CreateRegister";
+import CreateRegister from "../screens/Register";
 import Profile from "../screens/Profile";
-import CreatePlant from "../screens/CreatePlant";
+import CreatePlant from "../screens/Plant";
 
 
 const NotLogged = () => (
@@ -23,8 +23,8 @@ const Logged = () => (
   <>
     <Route path="/" element={<Home />} />
     <Route path="/home" element={<Home />} />
-    <Route path="/fazerRegistro" element={<CreateRegister />} />
-    <Route path="/cadastrarPlanta" element={<CreatePlant />} />
+    <Route path="/register" element={<CreateRegister />} />
+    <Route path="/planta" element={<CreatePlant />} />
     <Route path="/perfil" element={<Profile />} />
   </>
 )

@@ -4,7 +4,7 @@ import styles from './styles';
 
 interface IInput {
   id: string;
-  value: string;
+  value: string | Date;
   label: string;
   type: React.HTMLInputTypeAttribute;
   placeholder: string;
@@ -14,7 +14,7 @@ interface IInput {
   style?: React.CSSProperties,
   multiline?: boolean,
   errorMessage?: string,
-  onChange: (item: string) => void;
+  onChange?: (item: string) => void;
   onCLickPasswordVisibility?: () => void;
 }
 
@@ -36,7 +36,8 @@ export default function Input(props: IInput) {
   } = props;
 
   function onChangeClosed(value: any) {
-    onChange(value.target.value)
+    if (onChange)
+      onChange(value.target.value)
   }
 
   const defaultStyle = disabled

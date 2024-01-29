@@ -24,6 +24,18 @@ const styles = {
   containerButtons: {
     justifyContent: 'space-between',
     marginBottom: '16px'
+  },
+  containerRegister: {
+    width: '100%'
+  },
+  contentRegister: {
+    padding: '8px'
+  },
+  containerRegisterTitle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
   }
 }
 

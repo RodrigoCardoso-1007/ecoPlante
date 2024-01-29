@@ -9,7 +9,7 @@ import Avatar from '../Avatar';
 
 export default function Header() {
   const navigate = useNavigate();
-  const { updateUserData } = useContext(UserContext)
+  const { userData, updateUserData } = useContext(UserContext)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -64,7 +64,7 @@ export default function Header() {
         </Menu>
       </div>
 
-      <Avatar size={48} onClick={onPressProfile} />
+      <Avatar size={48} onClick={onPressProfile} src={userData?.photo} />
     </div>
   )
 }
