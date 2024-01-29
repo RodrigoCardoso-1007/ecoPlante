@@ -13,6 +13,7 @@ import { format } from 'date-fns'
 import colors from "../../styles/colors";
 import IRegisterModel from "../../model/register.model";
 import DefaultPlant from './../../assets/Images/defaultPlant.svg';
+import { validateDate } from "../../modules/ValidationsForm";
 
 export default function CreatePlant() {
   const { state } = useLocation();
@@ -24,12 +25,19 @@ export default function CreatePlant() {
   const [name, setName] = useState(plant?.namePlant || '');
   const [difficulty, setDifficulty] = useState(plant?.difficulty || '');
   const [local, setLocal] = useState(plant?.local || '');
-  const [date, setDate] = useState(plant?.datePlant || '');
+  const [date, setDate] = useState(plant?.datePlant || null);
   const [description, setDescription] = useState(plant?.description || '');
   const [photo, setPhoto] = useState(plant?.photo || DefaultPlant);
 
+  const [nameError, setNameError] = useState('');
+  const [difficultyError, setDifficultyError] = useState('');
+  const [localError, setLocalError] = useState('');
+  const [dateError, setDateError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
+
   function onPressSave() {
-    console.log('location', state)
+    if (!validateForm())
+      return
   }
 
   function onPressGoBack() {
@@ -65,6 +73,70 @@ export default function CreatePlant() {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  function validateForm() {
+    let valid = true;
+
+    if (!name) {
+      setNameError('Campo obrigatório')
+      valid = false;
+    }
+
+    if (!difficulty) {
+      setDifficultyError('Campo obrigatório')
+      valid = false;
+    }
+
+    if (!local) {
+      setLocalError('Campo obrigatório')
+      valid = false;
+    }
+
+    if (!date) {
+      setDateError('Campo obrigatório')
+      valid = false;
+    }
+
+    if (date && !validateDate(date)) {
+      setDateError('Data está no futuro')
+      valid = false;
+    }
+
+    if (!description) {
+      setDescriptionError('Campo obrigatório')
+      valid = false;
+    }
+
+    return valid
+  }
+
+  function changeName(value: string) {
+    setName(value);
+    setNameError('')
+  }
+
+  function changeDifficulty(value: string) {
+    setDifficulty(value);
+    setDifficultyError('')
+  }
+
+  function changeLocal(value: string) {
+    setLocal(value);
+    setLocalError('')
+  }
+
+  function changeDate(value: string) {
+    if (value) {
+      const date = new Date(value).setDate(new Date(value).getDate() + 1);
+      setDate(new Date(date));
+    }
+    setDateError('')
+  }
+
+  function changeDescription(value: string) {
+    setDescription(value)
+    setDescriptionError('')
   }
 
   function renderRegister(register: IRegisterModel) {
@@ -148,51 +220,56 @@ export default function CreatePlant() {
               <Input
                 id={"name"}
                 value={name}
-                label={"Nome comum"}
+                label={"Nome comum*"}
                 type={"text"}
                 placeholder={"Digite o nome da planta"}
-                onChange={(value) => setName(value)} />
+                errorMessage={nameError}
+                onChange={changeName} />
             </Grid>
 
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <Input
                 id={"difficulty"}
                 value={difficulty}
-                label={"Dificuldade"}
+                label={"Dificuldade*"}
                 type={"text"}
                 placeholder={"Qual o nível de dificuldade de cuidar da planta?"}
-                onChange={(value) => setDifficulty(value)} />
+                errorMessage={difficultyError}
+                onChange={changeDifficulty} />
             </Grid>
 
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <Input
                 id={"local"}
                 value={local}
-                label={"Local"}
+                label={"Local*"}
                 type={"text"}
                 placeholder={"Onde a planta foi está?"}
-                onChange={(value) => setLocal(value)} />
+                errorMessage={localError}
+                onChange={changeLocal} />
             </Grid>
 
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <Input
                 id={"date"}
-                value={format(date, 'yyyy-MM-dd')}
-                label={"Data plantio"}
+                value={date ? format(date, 'yyyy-MM-dd') : ''}
+                label={"Data plantio*"}
                 type={"date"}
                 placeholder={"Qual foi a data de plantio?"}
-                onChange={(value) => setDate(value)} />
+                errorMessage={dateError}
+                onChange={changeDate} />
             </Grid>
 
             <Grid item lg={12} md={12} sm={12} xs={12}>
               <Input
                 id={"description"}
                 value={description}
-                label={"Descrição da planta"}
+                label={"Descrição da planta*"}
                 type={"text"}
                 multiline
                 placeholder={"Digite a descrição da planta"}
-                onChange={(value) => setDescription(value)} />
+                errorMessage={descriptionError}
+                onChange={changeDescription} />
             </Grid>
           </Grid>
         </Grid>
@@ -216,13 +293,15 @@ export default function CreatePlant() {
           </Grid>
         </Grid>
 
-        <Grid
-          container item
-          lg={8} md={8} sm={8} xs={10}
-          rowSpacing={1}
-          style={{ ...styles.containerButtons, ...{ marginTop: '16px' } }}>
-          {plant.registerList?.map(renderRegister)}
-        </Grid>
+        {plant && plant?.registerList &&
+          <Grid
+            container item
+            lg={8} md={8} sm={8} xs={10}
+            rowSpacing={1}
+            style={{ ...styles.containerButtons, ...{ marginTop: '16px' } }}>
+            {plant.registerList?.map(renderRegister)}
+          </Grid>
+        }
       </div>
     </div>
   )

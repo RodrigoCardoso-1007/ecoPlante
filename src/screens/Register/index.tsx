@@ -21,8 +21,14 @@ export default function CreateRegister() {
   const [adubacao, setAdubacao] = useState(register?.adubacao || '')
   const [photo, setPhoto] = useState(register?.photo || DefaultPlant)
 
+  const [regaError, setRegaError] = useState('')
+  const [podaError, setPodaError] = useState('')
+  const [adubacaoError, setAdubacaoError] = useState('')
+
   function onPressSave() {
-    console.log('location', state)
+    if (!validateForm())
+      return
+
   }
 
   function onPressGoBack() {
@@ -46,6 +52,42 @@ export default function CreateRegister() {
       };
       reader.readAsDataURL(file);
     }
+  }
+
+  function validateForm() {
+    let valid = true;
+
+    if (!poda) {
+      setPodaError('Campo obrigatório')
+      valid = false;
+    }
+
+    if (!rega) {
+      setRegaError('Campo obrigatório')
+      valid = false;
+    }
+
+    if (!adubacao) {
+      setAdubacaoError('Campo obrigatório')
+      valid = false;
+    }
+
+    return valid
+  }
+
+  function changePoda(value: string) {
+    setPoda(value);
+    setPodaError('')
+  }
+
+  function changeRega(value: string) {
+    setRega(value);
+    setRegaError('')
+  }
+
+  function changeAdubacao(value: string) {
+    setAdubacao(value);
+    setAdubacaoError('')
   }
 
   return (
@@ -75,30 +117,33 @@ export default function CreateRegister() {
               <Input
                 id={"Poda"}
                 value={poda}
-                label={"Poda"}
+                label={"Poda*"}
                 type={"text"}
                 placeholder={"Qual foi a poda?"}
-                onChange={(value) => setPoda(value)} />
+                errorMessage={podaError}
+                onChange={changePoda} />
             </Grid>
 
             <Grid item lg={4} md={4} sm={12} xs={12}>
               <Input
                 id={"Rega"}
                 value={rega}
-                label={"Rega"}
+                label={"Rega*"}
                 type={"text"}
                 placeholder={"Quanto foi a última rega?"}
-                onChange={(value) => setRega(value)} />
+                errorMessage={regaError}
+                onChange={changeRega} />
             </Grid>
 
             <Grid item lg={4} md={4} sm={12} xs={12}>
               <Input
-                id={"Adubacao"}
+                id={"Adubacao*"}
                 value={adubacao}
                 label={"Adubação"}
                 type={"text"}
                 placeholder={"Qual foi a adubação?"}
-                onChange={(value) => setAdubacao(value)} />
+                errorMessage={adubacaoError}
+                onChange={changeAdubacao} />
             </Grid>
           </Grid>
         </Grid>

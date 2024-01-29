@@ -9,6 +9,7 @@ import ButtonText from '../../components/ButtonText';
 import styles from './styles';
 import { UserRequest } from '../../modules/Network/User';
 import { UserContext } from '../../contexts/user.context';
+import { validateEmail } from '../../modules/ValidationsForm';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -18,11 +19,16 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
 
+  const [emailError, setEmailError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+
   function onPressForgetPassword() {
     navigate('/trocarSenha')
   }
 
   function onPressLogin() {
+    if (!validateFields()) return;
+
     UserRequest().login({ email, password })
       .then((res) => {
         updateUserData(res)
@@ -33,6 +39,30 @@ export default function Login() {
 
   function onPressCreateAccount() {
     navigate('/cadastro')
+  }
+
+  function validateFields() {
+    let valid = true;
+    if (!validateEmail(email)) {
+      setEmailError('Email inválido')
+      valid = false;
+    }
+    if (!password) {
+      setPasswordError('Senha é obrigatório')
+      valid = false
+    }
+
+    return valid;
+  }
+
+  function changeEmail(value: string) {
+    setEmail(value)
+    setEmailError('')
+  }
+
+  function changePassword(value: string) {
+    setPassword(value);
+    setPasswordError('')
   }
 
   return (
@@ -61,7 +91,8 @@ export default function Login() {
               value={email}
               type={'text'}
               placeholder='Digite seu email'
-              onChange={(value) => setEmail(value)} />
+              errorMessage={emailError}
+              onChange={changeEmail} />
 
             <Input
               id='senha'
@@ -69,8 +100,9 @@ export default function Login() {
               value={password}
               type='text'
               placeholder='Digite sua senha'
+              errorMessage={passwordError}
               hidePassword={hidePassword}
-              onChange={(value) => setPassword(value)}
+              onChange={changePassword}
               onCLickPasswordVisibility={() => setHidePassword(value => !value)} />
           </div>
 
