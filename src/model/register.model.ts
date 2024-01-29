@@ -3,6 +3,7 @@ interface IRegisterModel {
   rega: string;
   poda: string;
   adubacao: string;
+  dateRegister: Date
 }
 
 export default IRegisterModel;

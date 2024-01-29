@@ -79,7 +79,7 @@ export default function Login() {
 
             <div style={styles.containerButtonsText}>
               <ButtonText
-                principalText={'Esqueceu seu senha?'}
+                principalText={'Esqueceu sua senha?'}
                 onClick={onPressForgetPassword}
               />
               <ButtonText

@@ -1,28 +1,51 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./styles";
 import Button from "../../components/Button";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "../../components/Header";
 import Title from "../../components/Title";
 import ImageContainer from "../../components/ImageContainer";
 import { Grid } from "@mui/material";
 import Input from "../../components/Input";
-
+import DefaultPlant from './../../assets/Images/defaultPlant.svg';
 
 export default function CreateRegister() {
   const { state } = useLocation();
+  const register = state?.register
   const navigate = useNavigate();
 
-  const [rega, setRega] = useState(state?.register?.rega || '')
-  const [poda, setPoda] = useState(state?.register?.poda || '')
-  const [adubacao, setAdubacao] = useState(state?.register?.adubacao || '')
+  const inputFile = useRef(null)
+
+  const [rega, setRega] = useState(register?.rega || '')
+  const [poda, setPoda] = useState(register?.poda || '')
+  const [adubacao, setAdubacao] = useState(register?.adubacao || '')
+  const [photo, setPhoto] = useState(register?.photo || DefaultPlant)
 
   function onPressSave() {
     console.log('location', state)
   }
 
   function onPressGoBack() {
-    navigate('/')
+    navigate(-1)
+  }
+
+  function onPressPhoto() {
+    // @ts-ignore
+    if (inputFile) inputFile.current.click();
+  }
+
+  function changePhoto(event: any) {
+    const file = event.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        if (typeof (reader.result) === 'string')
+          setPhoto(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   return (
@@ -33,9 +56,19 @@ export default function CreateRegister() {
           <Title styleProps={{ marginBottom: '16px' }}>
             Registro da planta
           </Title>
-          <ImageContainer styleProps={{ marginBottom: '16px' }}
-            src="https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg"
+          <ImageContainer
+            src={photo}
+            styleProps={{ marginBottom: '16px' }}
+            onClick={onPressPhoto}
           />
+
+          <input
+            type='file'
+            id='file'
+            onChange={changePhoto}
+            ref={inputFile}
+            style={{ display: 'none' }}
+            accept=".jpg,.jpeg" />
 
           <Grid container spacing={2}>
             <Grid item lg={4} md={4} sm={12} xs={12}>

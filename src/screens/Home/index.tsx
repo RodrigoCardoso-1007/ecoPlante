@@ -16,7 +16,28 @@ const PLANT_LIST_MOCK: IPlantModel[] = [
     difficulty: 'Fácil',
     local: 'casa',
     namePlant: 'Planta 1',
-    photo: 'https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg'
+    photo: 'https://static.todamateria.com.br/upload/pa/is/paisagem-natural-og.jpg',
+    registerList: [
+      {
+        idRegister: 1,
+        poda: 'Poda 1',
+        rega: 'Rega 1',
+        adubacao: 'Adubacao 1',
+        dateRegister: new Date(),
+      }, {
+        idRegister: 2,
+        poda: 'Poda 2',
+        rega: 'Rega 2',
+        adubacao: 'Adubacao 2',
+        dateRegister: new Date(),
+      }, {
+        idRegister: 3,
+        poda: 'Poda 3',
+        rega: 'Rega 3',
+        adubacao: 'Adubacao 3',
+        dateRegister: new Date(),
+      }
+    ]
   },
   {
     idPlant: 2,
@@ -50,14 +71,14 @@ export default function Home() {
 
   function onPressCard(plant?: IPlantModel | null) {
     if (!!plant)
-      navigate('/cadastrarPlanta', { state: { plant } })
+      navigate('/planta', { state: { plant } })
     else
-      navigate('/cadastrarPlanta')
+      navigate('/planta')
   }
 
   function renderItem(plant: IPlantModel) {
     return (
-      <Grid item lg={3} md={4} sm={6} xs={6}>
+      <Grid item lg={3} md={4} sm={6} xs={6} key={plant.idPlant}>
         <CardPlant
           title={plant.namePlant}
           src={plant.photo}

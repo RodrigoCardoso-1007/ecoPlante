@@ -7,12 +7,13 @@ const styles = {
     backgroundColor: colors.primary.dark,
     justifyContent: 'center',
     alignItems: 'center',
+    minWidth: '300px',
+    minHeight: '120px'
   },
   image: {
-    height: 'auto',
-    width: 'auto',
-    maxWidth: '300px',
-    maxheight: '300px'
+    height: '120px',
+    width: '300px',
+
   }
 }
 
