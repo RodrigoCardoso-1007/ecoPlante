@@ -9,29 +9,53 @@ import Input from "../../components/Input";
 import Avatar from "../../components/Avatar";
 import { UserContext } from "../../contexts/user.context";
 import IUserModel from "../../model/user.model";
+import { UserRequest } from "../../modules/Network/User";
+import { SnackContext } from "../../contexts/snackProvider.context";
+import { InUpdate } from "../../modules/Network/User/userRequest.interface";
 
 
 export default function Profile() {
   const { userData, updateUserData } = useContext(UserContext)
   const navigate = useNavigate();
+  const snack = useContext(SnackContext)
 
   const inputFile = useRef(null)
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const [name, setName] = useState(userData?.name || '')
   const [about, setAbout] = useState(userData?.about || '')
   const [photo, setPhoto] = useState(userData?.photo || '')
 
   function onPressSave() {
-    const newUserData: IUserModel = {
+
+    const data: InUpdate = {
       name: name,
       about: about,
-      photo: photo,
-      email: userData?.email || '',
-      idUser: userData?.idUser || 0
+      img: photo,
     }
 
-    updateUserData(newUserData)
-    // UserCOntrole.updateUser
+    UserRequest().update(data)
+      .then((res) => {
+        if (res.success && res.data) {
+          snack.addMessage('Atualizado com sucesso!')
+
+          const newUserData: IUserModel = {
+            name: name,
+            about: about,
+            photo: photo,
+            email: userData?.email || '',
+          }
+
+          updateUserData(newUserData);
+        } else {
+          throw new Error(res.message)
+        }
+      }).catch((err) => {
+        snack.addMessage(err.message)
+      }).finally(() => {
+        setIsLoading(false)
+      })
   }
 
   function onPressGoBack() {

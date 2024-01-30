@@ -4,14 +4,26 @@ interface InLogin {
 }
 
 interface OutLogin {
-  idUser: number,
   email: string,
   name: string,
+  about?: string,
+  img?: string,
+  token: string
+}
+
+interface InUpdate {
+  name: string,
   about: string,
-  photo: string
+  img: string
+}
+
+interface CreateAccount extends InLogin {
+  name: string;
 }
 
 export type {
   InLogin,
-  OutLogin
+  OutLogin,
+  CreateAccount,
+  InUpdate
 }

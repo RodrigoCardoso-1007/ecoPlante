@@ -1,5 +1,6 @@
 import { createContext, useState } from 'react';
 import IUserModel from '../model/user.model';
+import { UserRequest } from '../modules/Network/User';
 
 interface IUserContext {
   userData: IUserModel | null,
@@ -19,6 +20,7 @@ const UserContextProvider = ({ children }: any) => {
     setUserData(data)
 
     if (data === null) {
+      UserRequest().removeToken();
       localStorage.removeItem('userData')
     } else {
       localStorage.setItem('userData', JSON.stringify(data));

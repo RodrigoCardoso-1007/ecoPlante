@@ -1,25 +1,33 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./styles";
 import Button from "../../components/Button";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Header from "../../components/Header";
 import Title from "../../components/Title";
 import ImageContainer from "../../components/ImageContainer";
 import { Grid } from "@mui/material";
 import Input from "../../components/Input";
 import DefaultPlant from './../../assets/Images/defaultPlant.svg';
+import { RegisterRequest } from "../../modules/Network/Register";
+import { InRegister } from "../../modules/Network/Register/plantRequest.interface";
+import { SnackContext } from "../../contexts/snackProvider.context";
 
 export default function CreateRegister() {
   const { state } = useLocation();
   const register = state?.register
+  const idPlant = state?.idPlant
+
   const navigate = useNavigate();
+  const snack = useContext(SnackContext)
 
   const inputFile = useRef(null)
 
+  const [isLoading, setIsLoading] = useState(false);
   const [rega, setRega] = useState(register?.rega || '')
   const [poda, setPoda] = useState(register?.poda || '')
   const [adubacao, setAdubacao] = useState(register?.adubacao || '')
   const [photo, setPhoto] = useState(register?.photo || DefaultPlant)
+  const [description, setDescription] = useState(register?.decricao)
 
   const [regaError, setRegaError] = useState('')
   const [podaError, setPodaError] = useState('')
@@ -28,7 +36,68 @@ export default function CreateRegister() {
   function onPressSave() {
     if (!validateForm())
       return
+    setIsLoading(true)
+    if (register)
+      updateRegister()
+    else
+      createRegister()
+  }
 
+  function createRegister() {
+    const plantObj: InRegister = {
+      pruning: poda,
+      watering: rega,
+      img: photo,
+      fertilizing: adubacao,
+      description: description,
+      idPlant: idPlant
+    }
+
+    RegisterRequest().create(plantObj)
+      .then((res) => {
+        if (res.success && res.data) {
+          snack.addMessage('Criado com sucesso!')
+          navigate(-1)
+        } else {
+          throw new Error(res.message)
+        }
+      }).catch((err) => {
+        snack.addMessage(err.message)
+      }).finally(() => {
+        setIsLoading(false)
+      })
+  }
+
+  function updateRegister() {
+    RegisterRequest().update(description, register.idRegister)
+      .then((res) => {
+        if (res.success) {
+          snack.addMessage('Atualizado com sucesso!')
+          navigate(-1)
+        } else {
+          throw new Error(res.message)
+        }
+      }).catch((err) => {
+        snack.addMessage(err.message)
+      }).finally(() => {
+        setIsLoading(false)
+      })
+  }
+
+  function onPressDelete() {
+    RegisterRequest().deleteItem(register.idRegister)
+      .then((res) => {
+        if (res.success && res.data) {
+          snack.addMessage('Apagado com sucesso!')
+          navigate(-1)
+        } else {
+          throw new Error(res.message)
+        }
+      }).catch((err) => {
+        snack.addMessage(err.message)
+      }).finally(() => {
+        setIsLoading(false)
+      })
   }
 
   function onPressGoBack() {
@@ -119,6 +188,7 @@ export default function CreateRegister() {
                 value={poda}
                 label={"Poda*"}
                 type={"text"}
+                disabled={!!register}
                 placeholder={"Qual foi a poda?"}
                 errorMessage={podaError}
                 onChange={changePoda} />
@@ -130,6 +200,7 @@ export default function CreateRegister() {
                 value={rega}
                 label={"Rega*"}
                 type={"text"}
+                disabled={!!register}
                 placeholder={"Quanto foi a última rega?"}
                 errorMessage={regaError}
                 onChange={changeRega} />
@@ -141,9 +212,21 @@ export default function CreateRegister() {
                 value={adubacao}
                 label={"Adubação"}
                 type={"text"}
+                disabled={!!register}
                 placeholder={"Qual foi a adubação?"}
                 errorMessage={adubacaoError}
                 onChange={changeAdubacao} />
+            </Grid>
+
+            <Grid item lg={12} md={12} sm={12} xs={12}>
+              <Input
+                id={"description"}
+                value={description}
+                label={"Descrição da planta"}
+                type={"text"}
+                multiline
+                placeholder={"Digite a descrição da planta"}
+                onChange={(value) => setDescription(value)} />
             </Grid>
           </Grid>
         </Grid>
@@ -153,12 +236,19 @@ export default function CreateRegister() {
           lg={8} md={8} sm={8} xs={10}
           rowSpacing={1}
           style={styles.containerButtons}>
-          <Grid item lg={5.5} md={5.5} sm={5.5} xs={12}>
-            <Button children={"Voltar"} onClick={onPressGoBack} />
+          <Grid item lg={3.5} md={3.5} sm={6} xs={12}>
+            <Button children={"Voltar"} isLoading={isLoading} onClick={onPressGoBack} />
           </Grid>
-          <Grid item lg={5.5} md={5.5} sm={5.5} xs={12}>
-            <Button children={"Salvar"} onClick={onPressSave} />
+
+          <Grid item lg={3.5} md={3.5} sm={6} xs={12}>
+            <Button children={"Salvar"} isLoading={isLoading} onClick={onPressSave} />
           </Grid>
+
+          {register &&
+            <Grid item lg={3.5} md={3.5} sm={6} xs={12}>
+              <Button children={"Deletar"} isLoading={isLoading} onClick={onPressDelete} />
+            </Grid>
+          }
         </Grid>
       </div>
     </div>

@@ -8,11 +8,14 @@ import Button from '../../components/Button';
 import ButtonText from '../../components/ButtonText';
 import styles from './styles';
 import { UserRequest } from '../../modules/Network/User';
-import { UserContext } from '../../contexts/user.context';
+import { validateEmail } from '../../modules/ValidationsForm';
+import { SnackContext } from '../../contexts/snackProvider.context';
 
 export default function CreateAccount() {
   const navigate = useNavigate();
-  const { updateUserData } = useContext(UserContext)
+  const snack = useContext(SnackContext)
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -21,18 +24,80 @@ export default function CreateAccount() {
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
 
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+
   function onPressLogin() {
     navigate('/')
   }
 
   function onPressCreate() {
-    UserRequest().login({ email, password })
+    if (!validateFields())
+      return
+
+    setIsLoading(true);
+
+    UserRequest().create({ email, password, name })
       .then((res) => {
-        updateUserData(res)
-        navigate('/')
+        if (res.success && res.data) {
+          snack.addMessage('Cadastrado com sucesso')
+          navigate('/')
+        } else
+          throw new Error(res.message)
       }).catch((error) => {
-        console.log("error", error)
+        snack.addMessage('Não foi possível cadastrar usuário')
+      }).finally(() => {
+        setIsLoading(false)
       })
+  }
+
+  function validateFields() {
+    let valid = true;
+    if (!name) {
+      setNameError('Nome é obrigatório')
+      valid = false
+    }
+    if (!validateEmail(email)) {
+      setEmailError('Email inválido')
+      valid = false;
+    }
+    if (!password) {
+      setPasswordError('Senha é obrigatório')
+      valid = false
+    }
+    if (!confirmPassword) {
+      setConfirmPasswordError('COnfirmação de senha é obrigatório')
+      valid = false
+    }
+    if (password !== confirmPassword) {
+      setPasswordError('As senhas estão diferentes')
+      setConfirmPasswordError('As senhas estão diferentes')
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  function changeName(value: string) {
+    setName(value);
+    setNameError('');
+  }
+
+  function changeEmail(value: string) {
+    setEmail(value);
+    setEmailError('');
+  }
+
+  function changePassword(value: string) {
+    setPassword(value);
+    setPasswordError('');
+  }
+
+  function changeConfirmPassword(value: string) {
+    setConfirmPassword(value);
+    setConfirmPasswordError('');
   }
 
   return (
@@ -60,8 +125,9 @@ export default function CreateAccount() {
               label='Nome'
               value={name}
               type={'text'}
-              placeholder='Digite seu email'
-              onChange={(value) => setName(value)} />
+              placeholder='Digite seu nome'
+              errorMessage={nameError}
+              onChange={changeName} />
 
             <Input
               id='email'
@@ -69,7 +135,8 @@ export default function CreateAccount() {
               value={email}
               type={'text'}
               placeholder='Digite seu email'
-              onChange={(value) => setEmail(value)} />
+              errorMessage={emailError}
+              onChange={changeEmail} />
 
             <Input
               id='password'
@@ -78,7 +145,8 @@ export default function CreateAccount() {
               type='text'
               placeholder='Digite sua senha'
               hidePassword={hidePassword}
-              onChange={(value) => setPassword(value)}
+              errorMessage={passwordError}
+              onChange={changePassword}
               onCLickPasswordVisibility={() => setHidePassword(value => !value)} />
 
             <Input
@@ -88,12 +156,13 @@ export default function CreateAccount() {
               type='text'
               placeholder='Confirme sua senha'
               hidePassword={hideConfirmPassword}
-              onChange={(value) => setConfirmPassword(value)}
+              errorMessage={confirmPasswordError}
+              onChange={changeConfirmPassword}
               onCLickPasswordVisibility={() => setHideConfirmPassword(value => !value)} />
           </div>
 
           <div style={styles.containerButtons}>
-            <Button onClick={onPressCreate}>Cadastrar</Button>
+            <Button isLoading={isLoading} onClick={onPressCreate}>Cadastrar</Button>
 
             <div style={styles.containerButtonsText}>
               <ButtonText
@@ -105,6 +174,7 @@ export default function CreateAccount() {
           </div>
         </div>
       </Grid>
+
     </Grid >
   )
 }

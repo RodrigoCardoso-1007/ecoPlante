@@ -10,11 +10,15 @@ import styles from './styles';
 import { UserRequest } from '../../modules/Network/User';
 import { UserContext } from '../../contexts/user.context';
 import { validateEmail } from '../../modules/ValidationsForm';
+import { SnackContext } from '../../contexts/snackProvider.context';
+import IUserModel from '../../model/user.model';
 
 export default function Login() {
   const navigate = useNavigate();
+  const snack = useContext(SnackContext)
   const { updateUserData } = useContext(UserContext)
 
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
@@ -22,18 +26,29 @@ export default function Login() {
   const [emailError, setEmailError] = useState('')
   const [passwordError, setPasswordError] = useState('')
 
-  function onPressForgetPassword() {
-    navigate('/trocarSenha')
-  }
-
   function onPressLogin() {
     if (!validateFields()) return;
 
+    setIsLoading(true);
+
     UserRequest().login({ email, password })
       .then((res) => {
-        updateUserData(res)
+        if (res.success && res.data) {
+
+          const newUserData: IUserModel = {
+            name: res.data.name,
+            about: res.data.about,
+            photo: res.data.img,
+            email: email || '',
+          }
+          updateUserData(newUserData)
+          navigate('/')
+        } else
+          throw new Error(res.message)
       }).catch((error) => {
-        console.log("error", error)
+        snack.addMessage('Não foi possível realizar o login')
+      }).finally(() => {
+        setIsLoading(false)
       })
   }
 
@@ -107,13 +122,9 @@ export default function Login() {
           </div>
 
           <div style={styles.containerButtons}>
-            <Button onClick={onPressLogin}>Entrar</Button>
+            <Button isLoading={isLoading} onClick={onPressLogin}>Entrar</Button>
 
             <div style={styles.containerButtonsText}>
-              <ButtonText
-                principalText={'Esqueceu sua senha?'}
-                onClick={onPressForgetPassword}
-              />
               <ButtonText
                 complementeText={'Não tem conta? '}
                 principalText={'Cadastre-se'}

@@ -1,12 +1,15 @@
 import React from 'react';
 import RouteComponent from "./routes";
 import { UserContextProvider } from './contexts/user.context';
+import { SnackContextProvider } from './contexts/snackProvider.context';
 
 export default function App() {
 
   return (
-    <UserContextProvider>
-      <RouteComponent />
-    </UserContextProvider>
+    <SnackContextProvider>
+      <UserContextProvider>
+        <RouteComponent />
+      </UserContextProvider>
+    </SnackContextProvider>
   );
 }

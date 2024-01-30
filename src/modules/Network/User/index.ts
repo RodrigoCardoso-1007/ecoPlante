@@ -1,24 +1,33 @@
-import RestAPI from "../apiModule"
-import { InLogin, OutLogin } from "./userRequest.interface"
+import RestAPI, { BASE_URL, IRequest } from "../apiModule"
+import { CreateAccount, InLogin, OutLogin, InUpdate } from "./userRequest.interface"
 
 export function UserRequest() {
-  const USER_URL = '/User'
+  async function login(data: InLogin): Promise<IRequest<OutLogin>> {
+    const response = await RestAPI.httpPost(`${BASE_URL}/login`, data).then((response) => response);
 
-  function login(data: InLogin): Promise<OutLogin> {
-    return new Promise((resolve) => setInterval(() => {
-      resolve({
-        idUser: 1,
-        email: 'email@email.com',
-        name: 'name',
-        about: 'sobre',
-        photo: 'photUser'
-      })
-    }, 100))
+    // @ts-ignore
+    if (response.success && response.data)
+      RestAPI.updateToken(response.data.token)
 
-    //return RestAPI.httpPost(`${USER_URL}/login`, data);
+    return response
+  }
+
+  function create(data: CreateAccount): Promise<IRequest<OutLogin>> {
+    return RestAPI.httpPost(`${BASE_URL}/user`, data).then((response) => response);
+  }
+
+  function update(data: InUpdate): Promise<IRequest<InUpdate>> {
+    return RestAPI.httpPatch(`${BASE_URL}/user`, data).then((response) => response);
+  }
+
+  async function removeToken() {
+    RestAPI.updateToken('')
   }
 
   return {
-    login
+    login,
+    create,
+    removeToken,
+    update
   }
 }

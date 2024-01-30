@@ -1,8 +1,10 @@
 interface IRegisterModel {
   idRegister: number;
-  rega: string;
-  poda: string;
-  adubacao: string;
+  idPlant: number;
+  rega?: string;
+  poda?: string;
+  adubacao?: string;
+  decricao?: string;
   dateRegister: Date
 }
 
